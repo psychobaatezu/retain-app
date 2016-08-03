@@ -1,8 +1,10 @@
 import {Component, Output} from "@angular/core";
 import {EventEmitter} from "@angular/compiler/src/facade/async";
+import {ColorPicker} from "./color-picker";
 
 @Component({
   selector: 'note-creator',
+  directives: [ColorPicker],
   styles: [`
     .note-creator {
       padding: 20px;
@@ -18,7 +20,7 @@ import {EventEmitter} from "@angular/compiler/src/facade/async";
     }
   `],
   template: `
-    <div class="note-creator shadow-2">
+    <div class="note-creator shadow-2" [ngStyle]="{'background-color': newNote.color}">
       <form class="row" (submit)="onCreateNote()">
         <input
           type="text"
@@ -40,6 +42,13 @@ import {EventEmitter} from "@angular/compiler/src/facade/async";
           class="actions col-xs-12 row between-xs" 
           *ngIf="fullForm"
         >
+          <div class="col-xs-3">
+            <color-picker 
+              [colors]="colors"
+              (selected)="onColorSelect($event)"
+            >
+            </color-picker>
+          </div>
           <button
             type="submit"
             class="btn-light"
@@ -54,25 +63,32 @@ import {EventEmitter} from "@angular/compiler/src/facade/async";
 export class NoteCreator {
   @Output()
   private createNote:EventEmitter<any> = new EventEmitter();
+  colors:Array<string> = ['#b19cd9', '#ff6961', '#77dd77', '#aec6cf', '#f49ac2', '#ffffff'];
   private newNote:any = {
     title: '',
-    value: ''
+    value: '',
+    color: '#ffffff'
   };
   private fullForm:boolean = false;
 
   onCreateNote():void {
-    const {title, value} = this.newNote;
+    const {title, value, color} = this.newNote;
 
     if (title && value) {
-      this.createNote.emit({title, value});
+      this.createNote.emit({title, value, color});
       this.reset();
     }
+  }
+
+  onColorSelect(color:string) {
+    this.newNote.color = color;
   }
 
   private reset():void {
     this.newNote = {
       title: '',
-      value: ''
+      value: '',
+      color: '#ffffff'
     };
   }
 
