@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {NoteCard} from "../ui/note-card";
 import {NoteCreator} from "../ui/note-creator";
 import {NoteService} from "../services/notes";
+import {Store} from "../store";
 
 @Component({
   selector: 'notes-container',
@@ -39,21 +40,21 @@ import {NoteService} from "../services/notes";
 export class Notes {
   private notes:any = [];
 
-  constructor(private noteService:NoteService) {
+  constructor(private noteService: NoteService, private store: Store) {
+    this.store.changes.pluck('notes')
+        .subscribe((notes: any) => this.notes = notes);
+
     this.noteService.getNotes()
-        .subscribe(res => this.notes = res.data);
+        .subscribe();
   }
 
   onNoteChecked(note:any, i:number):void {
     this.noteService.completeNote(note)
-        .subscribe(note => {
-          const i = this.notes.findIndex(localNote => localNote.id === note.id);
-          this.notes.splice(i, 1);
-        });
+        .subscribe();
   }
 
   onCreateNote(note:any):void {
     this.noteService.createNote(note)
-        .subscribe(note => this.notes.push(note));
+        .subscribe();
   }
 }
