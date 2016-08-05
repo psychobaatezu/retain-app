@@ -55,4 +55,8 @@ export class ApiService {
       throw error;
     }
   }
+
+  setHeaders(headers) {
+    Object.keys(headers).forEach(header => this.headers.set(header, headers[header]));
+  }
 }

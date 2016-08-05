@@ -8,13 +8,15 @@ export interface Note {
   id?: string | number,
   createdAt?: string,
   updatedAt?: string,
-  userId?
+  userId?: string
 }
 export interface State {
-  notes: Note[]
+  notes: Array<Note>;
+  user: Object;
 }
 const defaultState = {
-  notes: []
+  notes: [],
+  user: {}
 };
 
 const _store = new BehaviorSubject<State>(defaultState);
